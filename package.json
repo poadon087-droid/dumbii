@@ -1,0 +1,36 @@
+{
+  "name": "react-vite-tailwind",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit && npm test && npm run build",
+    "test": "esbuild tests/sim.ts --bundle --platform=node --format=esm --outfile=/tmp/hedde-sim.mjs --log-level=error && node /tmp/hedde-sim.mjs && esbuild tests/features.test.ts --bundle --platform=node --format=esm --outfile=/tmp/hedde-feat.mjs --log-level=error && node /tmp/hedde-feat.mjs && esbuild tests/render.test.ts --bundle --platform=node --format=esm --outfile=/tmp/hedde-render.mjs --log-level=error && node /tmp/hedde-render.mjs",
+    "perf": "esbuild tests/perf.ts --bundle --platform=node --format=esm --outfile=/tmp/hedde-perf.mjs --log-level=error && node /tmp/hedde-perf.mjs",
+    "test:browser": "node tests/browser/serve-wrapper.mjs && node tests/browser/boot.mjs",
+    "check:browser": "node tools/browser/smoke.mjs && node tools/browser/world.mjs && node tools/browser/robustness.mjs",
+    "check:all": "npm run check && npm run check:browser"
+  },
+  "dependencies": {
+    "clsx": "2.1.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tailwind-merge": "3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.17",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "playwright": "^1.63.0",
+    "playwright-core": "^1.63.0",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3",
+    "vite": "7.3.2",
+    "vite-plugin-singlefile": "2.3.0"
+  }
+}

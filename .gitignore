@@ -1,0 +1,17 @@
+# dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+
+# logs, editor and OS noise
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+*.swp
+
+# local scratch
+.tmp_*
+coverage/
+\n# browser-tool screenshots (diagnostics, regenerable)\ntools/browser/shots/\n
