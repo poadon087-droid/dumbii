@@ -41,8 +41,8 @@ const vis = () => pg.evaluate(() => {
     return cs.display === "none" || cs.visibility === "hidden" || cs.fontSize === "0px" || el.getClientRects().length === 0 ? "hidden" : "shown"; };
   return {
     shell: document.querySelector(".game-shell")?.className || "",
-    label: st(".health-label"), score: st(".score-num"), caption: st(".worldmap small"), buffs: st(".buffs"),
-    bar: st(".health-bar"), pips: st(".cards i"), pause: st(".hud-right .round-btn"), map: st(".worldmap .wm-grid"),
+    label: st(".health-label"), score: st(".score-num"), buffs: st(".buffs"),
+    bar: st(".health-bar"), pips: st(".cards i"), pause: st(".hud-right .round-btn"), map: st(".worldmap"),
     weapon: st(".weapon-switch"), hudLeft: st(".hud-left"), announce: st(".announce"), combo: st(".combo"),
     badge: st(".mode-badge"), coin: st(".coin-badge"), portrait: st(".portrait"),
   };
@@ -114,8 +114,8 @@ await pg.waitForTimeout(200); await resume(); await pg.waitForTimeout(500);
 const min = await vis();
 await shot("d3-hud-minimal.png");
 line("HUD → BARS ONLY applies and persists", setHud === "minimal" && /hud-minimal/.test(min.shell), `stored "${setHud}" · ${min.shell}`);
-line("the words come off the overlay", min.label === "hidden" && min.score === "hidden" && min.caption === "hidden" && min.buffs === "hidden", JSON.stringify(min).slice(0, 190));
-line("the meters and the map stay", min.bar === "shown" && min.pips === "shown" && min.map === "shown" && min.pause === "shown", JSON.stringify(min).slice(0, 190));
+line("the words come off the overlay", min.label === "hidden" && min.score === "hidden" && min.buffs === "hidden", JSON.stringify(min).slice(0, 190));
+line("the meters stay, and the map widget stays gone", min.bar === "shown" && min.pips === "shown" && min.pause === "shown" && min.map === "missing", JSON.stringify(min).slice(0, 190));
 
 // ── HUD → HIDDEN: nothing but the pause button, and the run keeps playing
 if (!await openPause()) throw new Error("could not open the pause panel");
@@ -124,7 +124,7 @@ await pg.waitForTimeout(200); await resume(); await pg.waitForTimeout(600);
 const off = await vis();
 const stillRunning = await pg.evaluate(async () => { const g = window.__rr_game(); const a = g.elapsed; await new Promise((r) => setTimeout(r, 500)); return { moved: g.elapsed > a, over: g.over }; });
 await shot("d4-hud-off.png");
-line("HUD → HIDDEN strips the overlay", off.hudLeft === "hidden" && off.weapon === "hidden" && off.map === "hidden" && off.portrait === "hidden", JSON.stringify(off).slice(0, 190));
+line("HUD → HIDDEN strips the overlay", off.hudLeft === "hidden" && off.weapon === "hidden" && off.map !== "shown" && off.portrait === "hidden", JSON.stringify(off).slice(0, 190));
 line("and leaves the pause button, so a run can never trap you", off.pause === "shown", JSON.stringify(off).slice(0, 120));
 line("the game keeps running underneath", stillRunning.moved && !stillRunning.over, JSON.stringify(stillRunning));
 const reopened = await openPause();

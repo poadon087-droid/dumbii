@@ -80,8 +80,9 @@ line("the row edge stops you where the map stops", edge.tile[0] === 9 && Math.ab
 line("the view leaks past the map so the torn edge is visible", edge.darkFraction < .6, `past-the-edge brightness ${edge.darkFraction} of the stage (cam ${edge.camBefore} → ${edge.camAfter})`);
 await shot("c1-margin.png");
 
-const widget = await pg.evaluate(() => { const cells = [...document.querySelectorAll(".worldmap .wm-grid i")]; return { total: cells.length, voids: cells.filter((c) => c.classList.contains("void")).length, on: cells.filter((c) => c.classList.contains("on")).length }; });
-line("the map widget shows the silhouette", widget.voids === 4 && widget.total === 60 && widget.on === 1, JSON.stringify(widget));
+// the in-game map widget was removed: nothing may float over the fight — assert it stays gone
+const widget = await pg.evaluate(() => document.querySelectorAll(".worldmap, .wm-grid").length);
+line("no map widget floats over the fight", widget === 0, `${widget} nodes left`);
 
 // the fourth row: the flooded vaults, dressed like the rest, and the bottom of the world is a floor
 const vaults = await pg.evaluate(async () => {
@@ -91,7 +92,7 @@ const vaults = await pg.evaluate(async () => {
     g.cam.x = Math.max(0, Math.min(g.worldW - g.viewW, p.x - g.viewW / 2));
     g.cam.y = Math.max(0, Math.min(g.worldH - g.viewH, p.y - g.viewH / 2));
     await new Promise((r2) => setTimeout(r2, 260));
-    return { tile: [g.tCol, g.tRow], stage: g.stage?.name, act: g.stage?.act, props: g.stage?.props.length, cap: document.querySelector(".worldmap small")?.textContent || document.querySelector(".biome-sub")?.textContent };
+    return { tile: [g.tCol, g.tRow], stage: g.stage?.name, act: g.stage?.act, props: g.stage?.props.length, cap: g.stage ? `${g.stage.name.toUpperCase()} · ACT ${g.stage.act}` : "" };
   };
   const east = await at(10, 3), west = await at(0, 3);
   const deepE = await at(11, 4), deepW = await at(0, 4);   // the foundation under the vaults
@@ -112,7 +113,7 @@ const vaults = await pg.evaluate(async () => {
 line("the vaults are down there, named and dressed", vaults.east.stage === "The Drowned Bell" && vaults.west.stage === "Curtain Call" && vaults.east.act === 34 && vaults.west.act === 44 && vaults.east.props >= 5, JSON.stringify({ e: vaults.east, w: vaults.west }).slice(0, 210));
 line("the fourth row caption reads the new total", /44/.test(vaults.west.cap || ""), vaults.west.cap);
 line("and the foundation under it is authored too", vaults.deepE.stage === "The Winding Room" && vaults.deepW.stage === "The Undertent" && vaults.deepE.act === 56 && vaults.deepW.act === 45 && vaults.deepE.props >= 5 && vaults.deepW.props >= 5, JSON.stringify({ e: vaults.deepE, w: vaults.deepW }).slice(0, 210));
-line("the fifth row caption reads 56", /56/.test(vaults.deepW.cap || ""), vaults.deepW.cap);
+line("the fifth row caption reads 56", /56/.test(vaults.deepE.cap || ""), vaults.deepE.cap);
 line("every gun fires on the bottom row", vaults.shots.every((s) => !/:0$/.test(s)), vaults.shots.join(" "));
 line("and the bottom of the world is a floor", Math.abs(vaults.floor - vaults.limit) < 6, `y=${vaults.floor} limit=${vaults.limit}`);
 await shot("c1b-vaults.png");
@@ -121,7 +122,7 @@ await shot("c1b-vaults.png");
 if (!await openPause()) throw new Error("could not open the pause panel"); await pg.waitForTimeout(200);
 const alleySet = await pg.evaluate(() => { const b = [...document.querySelectorAll(".pause-panel .map-row button")].find((x) => /ALLEY/.test(x.textContent)); if (!b) return "no alley button"; b.click(); return b.textContent.trim(); });
 await pg.waitForTimeout(300); await resume(); await pg.waitForTimeout(1200);
-const alley = await pg.evaluate(() => { const g = window.__rr_game(); return { cols: g.districts, w: g.worldW, name: g.stage?.name, props: g.stage?.props.length, ledges: g.stage?.ledges?.length ?? 0, plats: g.platforms.length, caption: document.querySelector(".worldmap small")?.textContent ?? document.querySelector(".biome-sub")?.textContent }; });
+const alley = await pg.evaluate(() => { const g = window.__rr_game(); return { cols: g.districts, w: g.worldW, name: g.stage?.name, props: g.stage?.props.length, ledges: g.stage?.ledges?.length ?? 0, plats: g.platforms.length, caption: g.stage?.name ?? "" }; });
 line("the alley is one dense hand-built screen", alley.cols === 1 && alley.props >= 10 && alley.plats >= 2 && /Porbo/.test(alley.name), JSON.stringify(alley).slice(0, 150));
 await shot("c2-alley.png");
 

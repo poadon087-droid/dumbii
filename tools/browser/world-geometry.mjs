@@ -37,13 +37,13 @@ console.log("walked down:", JSON.stringify({ before, after }));
 await pg.evaluate(() => { const g = window.__rr_game(); g.enemies.length = 0; g.enemies.push({ ...g.enemies[0] } && { id: 999, kind: "gloop", x: g.player.x + 2600, y: g.player.y + 300, hp: 400, maxHp: 400, r: 22, speed: 0, vx: 0, vy: 0, cooldown: 99, stun: 0, hidden: false, hitIds: [], phase: 0, t: 0, dead: false, angle: 0, facing: 1, state: "idle", stateT: 0, elite: false, affix: undefined, shield: 0, hpRegen: 0, anchor: null, blast: 0, tele: 0, laser: 0, buffed: 0, charge: 0, target: null, size: 1, damage: 8, score: 30, spin: 0, arm: 0, life: 0, max: 0, hit: false, note: 0, beatIdx: 0, seed: 1, wob: 0, hop: 0, blink: 0, flash: 0, held: 0, stolen: [], sweeps: 0, bucket: 0, pushT: 0, line: 0, reel: 0, pet: false, petOf: -1, owner: -1, boss: false, bossPhase: 0, bossName: "", quote: "", special: 0, tint: 0, stunT: 0, angry: 0, carry: null, stage: 0, walk: 0, die: 0, ghost: 0, t2: 0, t3: 0, t4: 0, n1: 0, n2: 0 } ); });
 await pg.waitForTimeout(500);
 await pg.screenshot({ path: `${SHOTS}81-chevron.png`, clip: { x: box.x, y: box.y, width: box.width, height: box.height }, timeout: 120000 });
-const hud = await pg.evaluate(() => ({ cells: document.querySelectorAll(".worldmap .wm-grid i").length, on: document.querySelectorAll(".worldmap .wm-grid i.on").length, cap: document.querySelector(".worldmap small")?.textContent || "" }));
-console.log("hud map:", JSON.stringify(hud));
+const hud = await pg.evaluate(() => { const g = window.__rr_game(); return { widgetCells: document.querySelectorAll(".worldmap, .wm-grid").length, stage: g.stage?.name, act: g.stage?.act, tile: [g.tCol, g.tRow] }; });
+console.log("hud state (widget must be 0):", JSON.stringify(hud));
 // the map size switch, live
 await pg.keyboard.press("Escape"); await pg.waitForTimeout(350);
 await pg.getByRole("button", { name: /ONE SCREEN/i }).first().click({ force: true, timeout: 20000 }); await pg.waitForTimeout(400);
 await pg.keyboard.press("Escape"); await pg.waitForTimeout(700);
-const flat = await pg.evaluate(() => { const g = window.__rr_game(); return { w: g.worldW, h: g.worldH, rows: g.rows, cells: document.querySelectorAll(".worldmap .wm-grid i").length }; });
+const flat = await pg.evaluate(() => { const g = window.__rr_game(); return { w: g.worldW, h: g.worldH, rows: g.rows, widget: document.querySelectorAll(".worldmap, .wm-grid").length }; });
 console.log("after ONE SCREEN:", JSON.stringify(flat));
 console.log("errors:", errs.length ? errs.join(" | ") : "none");
 await b.close();

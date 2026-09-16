@@ -7,8 +7,8 @@ run them against a preview server:
 ```bash
 npm run build && npm run preview      # serves the single-file build on :4173
 node tools/browser/smoke.mjs          # boot → options → play → stunt → death letter
-node tools/browser/world.mjs          # the authored map: route, edges, margin, map widget, art styles
-node tools/browser/world-geometry.mjs # walking rows and columns, the HUD map, live map switching
+node tools/browser/world.mjs          # the authored map: route, edges, margin, art styles
+node tools/browser/world-geometry.mjs # walking rows and columns, live map switching
 node tools/browser/walkway.mjs        # the gangway and the doorway dissolve
 node tools/browser/hud.mjs            # sections, danger state, pause letter, mobile controls
 node tools/browser/touch.mjs          # thumb-stick geometry: nothing may overlap, aiming must fire

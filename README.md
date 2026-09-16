@@ -131,7 +131,7 @@ dance multiplier), and **HUD** controls the DOM overlay on top of it (labels, di
 the whole overlay, minus the pause button). Both apply instantly, mid-run included, and both are
 remembered. The simulation keeps counting every word it hides, so nothing about scoring or damage
 changes underneath; only the painting is switched off. `WORDS = NO TEXT` with `HUD = BARS ONLY`
-leaves a screen with no writing on it at all — meters, pips, rings and the little map stay, because
+leaves a screen with no writing on it at all — meters, pips and rings stay, because
 they are shapes, not words.
 
 ## Layout

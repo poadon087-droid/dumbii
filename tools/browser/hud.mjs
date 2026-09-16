@@ -22,11 +22,11 @@ const danger = await pg.evaluate(() => ({ cls: document.querySelector(".hud")?.c
 await pg.screenshot({ path: `${SHOTS}91-danger.png`, clip: { x: 0, y: 0, width: 1000, height: 300 } });
 // pause: options sections + the stage readout
 await pg.keyboard.press("Escape"); await pg.waitForTimeout(600);
-const paused = await pg.evaluate(() => ({ sects: [...document.querySelectorAll(".opt-sect")].map(e => e.textContent), place: document.querySelector(".act-place")?.textContent || "", map: document.querySelectorAll(".worldmap .wm-grid i").length, sizeBtns: [...document.querySelectorAll(".look-row button")].filter(x => /WHOLE SHOW|STRIP|ONE SCREEN|ALLEY/.test(x.textContent)).map(x => x.textContent.split("·")[0].trim()) }));
+const paused = await pg.evaluate(() => ({ sects: [...document.querySelectorAll(".opt-sect")].map(e => e.textContent), place: document.querySelector(".act-place")?.textContent || "", mapBtns: document.querySelectorAll(".pause-panel .map-row button").length, sizeBtns: [...document.querySelectorAll(".look-row button")].filter(x => /WHOLE SHOW|STRIP|ONE SCREEN|ALLEY/.test(x.textContent)).map(x => x.textContent.split("·")[0].trim()) }));
 await pg.screenshot({ path: `${SHOTS}92-pause.png`, clip: { x: 0, y: 0, width: 1000, height: 620 } });
 // switch the map live to THE STRIP and back
 await pg.getByRole("button", { name: /THE STRIP/i }).first().click(); await pg.waitForTimeout(500);
-const strip = await pg.evaluate(() => { const g = window.__rr_game(); return { cols: g.districts, rows: g.rows, w: g.worldW, h: g.worldH, cells: document.querySelectorAll(".worldmap .wm-grid i").length }; });
+const strip = await pg.evaluate(() => { const g = window.__rr_game(); return { cols: g.districts, rows: g.rows, w: g.worldW, h: g.worldH, widget: document.querySelectorAll(".worldmap, .wm-grid").length }; });
 await pg.getByRole("button", { name: /THE WHOLE SHOW/i }).first().click(); await pg.waitForTimeout(400);
 const show = await pg.evaluate(() => { const g = window.__rr_game(); return { cols: g.districts, rows: g.rows, h: g.worldH }; });
 await pg.keyboard.press("Escape"); await pg.waitForTimeout(700); await clear();
@@ -44,7 +44,7 @@ for (let i = 0; i < 8; i++) { const el = await mp.$(".upgrade-list button"); if 
 const stick = await mp.locator(".aim-stick").boundingBox();
 await mp.touchscreen.tap(stick.x + stick.width / 2, stick.y + 6);
 await mp.waitForTimeout(300);
-const dash = await mp.evaluate(() => { const g = window.__rr_game(); g.player.dashCd = .6; return { act: document.querySelectorAll(".mobile-controls .act").length, aim: !!document.querySelector(".aim-stick"), map: document.querySelectorAll(".worldmap .wm-grid i").length }; });
+const dash = await mp.evaluate(() => { const g = window.__rr_game(); g.player.dashCd = .6; return { act: document.querySelectorAll(".mobile-controls .act").length, aim: !!document.querySelector(".aim-stick"), widget: document.querySelectorAll(".worldmap, .wm-grid").length }; });
 await mp.screenshot({ path: `${SHOTS}94-mobile.png`, clip: { x: 0, y: 0, width: 420, height: 860 } });
 console.log("menu:", menu);
 console.log("danger:", JSON.stringify(danger));

@@ -316,5 +316,5 @@ export const rowSpanOf = (m: WorldMap, row: number) => {
   return m.stages.length === 0 ? { c0: 0, c1: m.cols - 1 } : m.spans[r];
 };
 
-/** The route order, for the run-over letter and the map widget's tooltip. */
+/** The route order, for the run-over letter. */
 export const routeOf = (m: WorldMap) => [...m.stages].sort((a, b) => a.act - b.act);

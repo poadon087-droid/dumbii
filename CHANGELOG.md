@@ -2,6 +2,13 @@
 
 Built on `poadon087-droid/hedde`. Same game, same identity — more of it, and fewer things wrong with it.
 
+## Unshipped — HUD trimming
+
+- **The in-game map widget is gone.** The floating stage-grid (mini map tile icons, player dot and
+  act caption) that hovered over the fight is removed in every HUD mode — nothing obstructs the
+  picture any more. The run-over letter and the pause panel still say which stage you are about,
+  and the bezel chevron still points at the nearest off-screen creep; navigation is unchanged.
+
 ## Verification
 
 ```

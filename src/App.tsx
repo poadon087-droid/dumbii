@@ -117,7 +117,7 @@ const TEXT_HINT: Record<TextMode, string> = {
 };
 const HUD_NAME: Record<Quality["hud"], string> = { full: "FULL", minimal: "BARS ONLY", off: "HIDDEN" };
 const HUD_HINT: Record<Quality["hud"], string> = {
-  full: "Overlay: meters, labels, captions, the map and the score, all of it.",
+  full: "Overlay: meters, labels, captions and the score, all of it.",
   minimal: "Overlay: bars, pips and icons only — every word and number is taken off it.",
   off: "Overlay: gone. Only the pause button stays, so a run can never trap you.",
 };
@@ -148,7 +148,8 @@ type Hud = {
   mode: Mode; onBeat: boolean; lightR: number;
   dance: { streak: number; best: number; heat: number };
   threat: string; charm: CharmKey; up: [string, number][];
-  world: { cols: number; rows: number; c: number; r: number; tx: number; ty: number; name: string; act: number; total: number; exists: boolean[] | null };
+  /** where the run stands on the authored map — shown on the pause panel and the death letter (the in-game floating map widget was removed) */
+  world: { cols: number; rows: number; c: number; r: number; name: string; act: number; total: number };
 };
 
 const Glyph = ({ d, className = "" }: { d: string; className?: string }) => <svg viewBox="0 0 64 44" className={className}><path d={d} /></svg>;
@@ -288,7 +289,8 @@ export default function App() {
     coins: 0, shopOpen: false, shopItems: [],
     stats: { shots: 0, hits: 0, byWeapon: {} }, daily: false,
     mode: "endless", onBeat: false, lightR: 250,
-    dance: { streak: 0, best: 0, heat: 0 }, threat: "", charm: "smoke", up: [], world: { cols: 1, rows: 1, c: 0, r: 0, tx: 0, ty: 0, name: BIOMES[0].name, act: 0, total: 0, exists: null },
+    dance: { streak: 0, best: 0, heat: 0 }, threat: "", charm: "smoke", up: [],
+    world: { cols: 1, rows: 1, c: 0, r: 0, name: BIOMES[0].name, act: 0, total: 0 },
   });
   const [touch, setTouch] = useState(() => matchMedia("(pointer: coarse)").matches);
   const [joyPos, setJoyPos] = useState({ x: 0, y: 0 });
@@ -574,13 +576,8 @@ export default function App() {
           threat: g.lastThreat, charm: g.charm, up: Object.entries(g.upgrades).filter(([, v]) => (v as number) > 0) as [string, number][],
           world: {
             cols: g.districts, rows: g.rows || 1, c: g.tCol, r: g.tRow,
-            tx: g.worldW > 0 ? Math.max(0, Math.min(1, g.player.x / g.worldW)) : 0,
-            ty: g.worldH > 0 ? Math.max(0, Math.min(1, g.player.y / g.worldH)) : 0,
             name: g.stage?.name ?? BIOMES[g.biome]?.name ?? "",
             act: g.stage?.act ?? 0, total: worldOf(g.map ?? "arena").stages.length,
-            exists: worldOf(g.map ?? "arena").stages.length
-              ? Array.from({ length: g.districts * (g.rows || 1) }, (_, k) => !!stageAt(worldOf(g.map ?? "arena"), k % g.districts, Math.floor(k / g.districts)))
-              : null,
           },
         });
       }
@@ -688,23 +685,6 @@ export default function App() {
               </button>
             )}
           </div>
-          {hud.world.cols * hud.world.rows > 1 && (
-            <div className="worldmap" title="every stage, walkable in any direction">
-              <div className="wm-grid" style={{ gridTemplateColumns: `repeat(${hud.world.cols}, 1fr)` }}>
-                {Array.from({ length: hud.world.cols * hud.world.rows }, (_, k) => {
-                  const c = k % hud.world.cols, r = Math.floor(k / hud.world.cols);
-                  const wm = worldOf(game.current?.map ?? quality.world);
-                  const st = stageAt(wm, c, r);
-                  const bi = st ? BIOMES[st.biome] : BIOMES[(((c + r * 4) % BIOMES.length) + BIOMES.length) % BIOMES.length];
-                  const empty = hud.world.exists ? !hud.world.exists[k] : false;
-                  if (empty) return <i key={k} className="void" title="the ink runs out here" />;
-                  return <i key={k} title={st ? `${st.name} · ACT ${st.act}` : `${bi.name} · ACT ${r * hud.world.cols + c + 1}`} className={c === hud.world.c && r === hud.world.r ? "on" : ""} style={{ background: bi.accent }} />;
-                })}
-                <b style={{ left: `${(hud.world.tx * 100).toFixed(2)}%`, top: `${(hud.world.ty * 100).toFixed(2)}%` }} />
-              </div>
-              <small>{hud.world.name.toUpperCase()}{hud.world.total > 1 ? ` · ACT ${hud.world.act}/${hud.world.total}` : ""}</small>
-            </div>
-          )}
           {hud.combo > 2 && <div className="combo" key={hud.combo}>{hud.combo} HIT!<small>HOT STREAK</small></div>}
           {hud.boss && (
             <div className="boss-bar" role="progressbar" aria-label={hud.boss.name} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(hud.boss.hp * 100)}>
