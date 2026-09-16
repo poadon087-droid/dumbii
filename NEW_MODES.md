@@ -201,7 +201,7 @@ Cheapest three to build first: **CASH OR BURN** (no new renderer work), **CASTIN
 ## A note on the map (this is not a mode)
 
 Modes live in `MODES`; the *shape* of the world does not. The run walks one of four
-authored maps — `THE WHOLE SHOW` (33 hand-placed stages), `THE STRIP` (the top row),
+authored maps — `THE WHOLE SHOW` (56 hand-placed stages), `THE STRIP` (the top row),
 `PORBO'S ALLEY` (one dense screen) or `ONE SCREEN` (the original arena) — chosen in
 **Options → THE MAP**, which can be changed mid-run. Difficulty still runs on the clock, so a mode's
 goal (survive, clear the wave, dance, blackout) is unaffected by which map you picked.

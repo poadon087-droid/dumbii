@@ -68,6 +68,9 @@ const P: Record<string, Patch> = {
   "shoot:paint":     { layers: [{ n: 1, f: 700, f2: 250, q: .8, d: .12, v: .13 }, { f: 250, f2: 150, d: .1, v: .07 }], throttle: .06 },
   "shoot:pie":       { layers: [{ n: 1, f: 500, f2: 180, q: .6, d: .14, v: .16 }, { f: 200, f2: 90, d: .12, v: .1 }] },
   "shoot:stamp":     { layers: [{ f: 160, f2: 90, d: .08, v: .18 }, { n: 1, f: 1200, d: .05, v: .12 }] },
+  "shoot:lance":     { layers: [{ n: 1, f: 2600, f2: 900, q: .9, d: .11, v: .12 }, { t: "square", f: 990, f2: 1980, d: .07, v: .06 }], throttle: .06 },
+  "shoot:sprinkler": { layers: [{ f: 520, f2: 980, d: .06, v: .08 }, { f: 660, f2: 1240, d: .06, v: .06, dl: .05 }, { f: 420, f2: 780, d: .06, v: .05, dl: .1 }], throttle: .08 },
+  "shoot:candle":    { layers: [{ f: 320, f2: 150, d: .16, v: .12 }, { n: 1, f: 1400, f2: 2600, q: 1.3, d: .1, v: .045, dl: .05 }] },
   // ---------- combat & feedback ----------
   hit:        { layers: [{ n: 1, f: 1600, d: .04, v: .12 }, { f: 220, f2: 150, d: .05, v: .09 }], throttle: .04 },
   bosshit:    { layers: [{ t: "triangle", f: 140, f2: 90, d: .12, v: .18 }, { n: 1, f: 900, d: .08, v: .1 }], throttle: .12 },
@@ -88,6 +91,9 @@ const P: Record<string, Patch> = {
   freeze:     { layers: [{ f: 1400, f2: 700, d: .2, v: .09 }, { f: 2100, f2: 1050, d: .18, v: .045 }], throttle: .1 },
   boing:      { layers: [{ f: 280, f2: 620, d: .12, v: .15 }, { f: 620, f2: 280, d: .14, v: .12, dl: .12 }], throttle: .1 },
   web:        { layers: [{ n: 1, f: 900, f2: 300, q: 2, d: .18, v: .09 }], throttle: .2 },
+  cheer:      { layers: [{ n: 1, f: 700, f2: 1400, d: .3, v: .1 }, { n: 1, f: 900, f2: 1800, d: .25, v: .07, dl: .12 }, { f: 1046, f2: 1568, d: .2, v: .06, dl: .1 }], throttle: .4 },
+  whiff:      { layers: [{ n: 1, f: 1800, f2: 500, d: .1, v: .07 }], throttle: .1 },
+  stamp:      { layers: [{ f: 190, f2: 70, d: .2, v: .22 }, { n: 1, f: 900, d: .08, v: .1, dl: .02 }], throttle: .2 },
   // ---------- pickups & progression ----------
   pickup:     { layers: [{ f: 1046, d: .06, v: .09 }, { f: 1568, d: .1, v: .09, dl: .05 }] },
   coin:       { layers: [{ t: "square", f: 1568, d: .04, v: .07 }, { t: "square", f: 2093, d: .09, v: .07, dl: .04 }], throttle: .05 },

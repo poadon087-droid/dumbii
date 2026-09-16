@@ -412,7 +412,7 @@ export function update(g: GameState, input: Input, dt: number, vw: number, h: nu
 
   // Aiming & firing.
   // The trigger used to be gated on "a creep is alive somewhere in the world" and the auto-aim
-  // locked on to the nearest one across all 33 stages — so between waves, or past a stage's edge,
+  // locked on to the nearest one across all 56 stages — so between waves, or past a stage's edge,
   // or while the only threat was mid-jump, the gun looked dead. Now: fire when asked, aim at what
   // you can actually hit, and sweep in front of you otherwise.
   const wk = currentWeapon(g);

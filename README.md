@@ -3,7 +3,7 @@
 An endless 1930s rubber-hose run-and-gun, rendered in hand-inked Canvas2D with a WebGL post pass.
 Built on [`poadon087-droid/hedde`](https://github.com/poadon087-droid/hedde) and extended: more weapons, creeps, stages, shaders, characters — same identity.
 
-**34 weapons · 34 creeps + boss · 33 hand-authored stages in one continuous map · 5 art styles · 3 playable stars · 13 charms · 22 boons**
+**37 weapons · 40 creeps + boss · 56 hand-authored stages in one continuous map · 5 art styles · 5 playable stars · 13 charms · 22 boons**
 
 ## Play it
 
@@ -145,7 +145,7 @@ src/game/util.ts       math, world bounds, enemy spatial index          (leaf)
 src/game/fx.ts         particles, floating text, cards, drops           (util)
 src/game/spawn.ts      creep / boss / crate spawning, enemy shots       (fx)
 src/game/combat.ts     damage, kills, parries, pickup collection        (spawn, economy)
-src/game/weapons.ts    all 34 weapons + EX supers                       (combat)
+src/game/weapons.ts    all 37 weapons + EX supers                       (combat)
 src/game/hazards.ts    per-biome stage hazards                          (combat)
 src/game/companions.ts hounds & bees                                    (combat)
 src/game/economy.ts    Porbo's shop + boons                             (fx)

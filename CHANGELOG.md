@@ -2,12 +2,31 @@
 
 Built on `poadon087-droid/hedde`. Same game, same identity — more of it, and fewer things wrong with it.
 
-## Unshipped — HUD trimming
+## Unshipped — HUD trimming & a small-things pass
 
 - **The in-game map widget is gone.** The floating stage-grid (mini map tile icons, player dot and
   act caption) that hovered over the fight is removed in every HUD mode — nothing obstructs the
   picture any more. The run-over letter and the pause panel still say which stage you are about,
   and the bezel chevron still points at the nearest off-screen creep; navigation is unchanged.
+- **The letterboxed shell no longer crops modals.** `pause-panel`/`upgrade-panel` were sized by
+  `100dvh` while living inside a 16:9 shell shorter than the viewport — on wide screens the bottom
+  of every big letter (including the run-over letter's buttons) was cut off by `overflow: hidden`.
+  Panels are now sized to the overlay, and the run-over letter pins "ONE MORE RIFF" to the bottom
+  of its scroll so the next run is always one visible tap away.
+- **The wayfinder caption stays on the screen.** The chevron rides the bezel, and its
+  "2.3 SCREENS" label used to hang half off the right edge; it is clamped inside the frame now.
+- **MAP rows no longer overflow.** "THE WHOLE SHOW · 56 HAND-LAID STAGES" (typo "HAND-Laid" fixed
+  too) wrapped past its button in OPTIONS and read as an ellipsis; the buttons wrap to two lines.
+- **The manual stops stuttering.** "SHIFT · SHIFT · brief invincibility" came from slicing the
+  binding list before deduplicating pretty names — dash now reads "SHIFT · L" like it should.
+- **Every gun has a voice again.** The three newest weapons (Ticket Lance, Sprinkler Saint, Vigil
+  Candle) and three feedback events (crowd `cheer`, parry `whiff`, anvil `stamp`) fell back to the
+  generic blip; each has a hand-built patch now, so all 37 weapons sound like themselves.
+- **Smaller stains cleaned:** "Heart Pie" no longer promises a "full recover" it never gave;
+  "LV. 1 ·" no longer dangles its dot when no biome is attached; the shop HUD button hides when
+  the till is somehow empty; the pause panel's row labels are legible on the cream paper instead
+  of cream-on-cream; the title tabs leave a corner clear for the sound dial; README/meta stats
+  match reality (37 weapons, 40 creeps, 56 stages, 5 stars).
 
 ## Verification
 

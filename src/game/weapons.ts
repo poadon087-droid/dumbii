@@ -1,4 +1,4 @@
-/** Weapon firing (all 34) and EX supers. */
+/** Weapon firing (all 37) and EX supers. */
 import { WEAPONS } from "./data";
 import type { Bullet, GameState, Point, WeaponKey } from "./types";
 import { bounds, clamp, dist, fieldTop, liveBuf, nearBuf2, nearby, rnd, TAU, viewBand } from "./util";

@@ -24,7 +24,7 @@ export function generateShopItems(g: GameState): ShopItem[] {
   items.push({
     id: "hp_feast",
     name: "Heart Pie",
-    desc: "+35 Health & full recover",
+    desc: "Restores 35 gumption on the spot",
     price: Math.round(15 * discount),
     icon: "M12 21S4 16.5 4 9.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5c0 7-8 11.5-8 11.5Z",
     bought: false,

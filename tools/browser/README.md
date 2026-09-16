@@ -14,6 +14,9 @@ node tools/browser/hud.mjs            # sections, danger state, pause letter, mo
 node tools/browser/touch.mjs          # thumb-stick geometry: nothing may overlap, aiming must fire
 node tools/browser/robustness.mjs     # focus loss, gamepad, context loss, no emoji, no clipped text
 node tools/browser/visual.mjs         # dialog focus, session prefs, key-map truthfulness, mobile
+node tools/browser/audit.mjs          # one screenshot per state: menu tabs, boons, shop, boss, super, letter
+node tools/browser/verify-no-map.mjs  # regression: the in-game map widget stays gone during play
+node tools/browser/verify-fixes.mjs   # regression: wayfinder clamp, map-row wrap, pinned letter button, key names
 node tools/browser/clean.mjs          # CLEAN SCREEN: WORDS + HUD dials, pixels gone, sim untouched
 node tools/browser/fuzz.mjs           # 45 s of random keys/mouse/touch/pad/resize with state invariants
 ```

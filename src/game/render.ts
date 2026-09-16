@@ -1424,7 +1424,11 @@ export function render(c: Ctx, g: GameState, w: number, h: number, t: number) {
         ctx.rotate(ang); ctx.fillStyle = dc; ctx.strokeStyle = INK; ctx.lineWidth = 2.5;
         ctx.beginPath(); ctx.moveTo(13, 0); ctx.lineTo(-6, -10); ctx.lineTo(-1, 0); ctx.lineTo(-6, 10); ctx.closePath(); ctx.fill(); ctx.stroke();
         ctx.restore();
-        if (words()) label(far >= 1 ? `${far.toFixed(1)} SCREENS` : `${Math.round(Math.hypot(dx, dy))} PACE${Math.round(Math.hypot(dx, dy)) === 1 ? "" : "S"}`, ex, ey + 22, 12, "#fbf6ea", 0, 4);
+        if (words()) {
+          // The chevron rides the bezel, so its caption can hang half off-screen: pull it back in.
+          const lx = Math.max(52, Math.min(w - 52, ex)), ly = Math.max(24, Math.min(h - 16, ey + 22));
+          label(far >= 1 ? `${far.toFixed(1)} SCREENS` : `${Math.round(Math.hypot(dx, dy))} PACE${Math.round(Math.hypot(dx, dy)) === 1 ? "" : "S"}`, lx, ly, 12, "#fbf6ea", 0, 4);
+        }
       }
     }
   }

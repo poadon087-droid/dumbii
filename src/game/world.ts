@@ -273,7 +273,7 @@ function shape(stages: StageDef[], cols: number, rows: number) {
 }
 
 export const MAPS: Record<MapId, MapDef> = {
-  gigantic: { id: "gigantic", name: "THE WHOLE SHOW", label: "56 HAND-Laid STAGES", blurb: "Every act authored: its own name, light, set dressing and threat. Stepped 12 / 11 / 10 / 11 / 12, walked as a snake down to the flooded vaults and the boiler dark under them.", ...shape(STAGES, 12, 5) },
+  gigantic: { id: "gigantic", name: "THE WHOLE SHOW", label: "56 HAND-LAID STAGES", blurb: "Every act authored: its own name, light, set dressing and threat. Stepped 12 / 11 / 10 / 11 / 12, walked as a snake down to the flooded vaults and the boiler dark under them.", ...shape(STAGES, 12, 5) },
   strip: { id: "strip", name: "THE STRIP", label: "ROOFTOPS ONLY · 12", blurb: "The top row on its own — twelve authored screens in a line, no rows below.", cols: 12, rows: 1, stages: STAGES.filter((s) => s.row === 0).map(clone) },
   arena: { id: "arena", name: "ONE SCREEN", label: "THE ORIGINAL ARENA", blurb: "One screen. The act changes on the clock, exactly as the game shipped.", stages: [], cols: 1, rows: 1 },
   alley: { id: "alley", name: "PORBO'S ALLEY", label: "SMALL & DENSE", blurb: "One hand-dressed street: ten props, ledges, a shopfront, laundry overhead. Everything is in arm's reach.", stages: [clone(ALLEY)], cols: 1, rows: 1 },

@@ -639,7 +639,9 @@ export default function App() {
 
   /** the how-to-play letter reads the live key map, so rebinding a key cannot leave the manual lying */
   // keyRev is state, so a rebinding re-renders this whole letter and the labels below read fresh
-  const kh = (a: ActName, n = 2) => keysMap.current[a].map(prettyKey).slice(0, n).join(" · ");
+  /** A modifier pair (ShiftLeft + ShiftRight) pretty-prints to the same word — dedupe after
+   *  mapping so the manual never reads "SHIFT · SHIFT". */
+  const kh = (a: ActName, n = 2) => [...new Set(keysMap.current[a].map(prettyKey))].slice(0, n).join(" · ");
   const wA = WEAPONS[loadout[0]], wB = WEAPONS[loadout[1]], sel = WEAPONS[loadout[slot]];
   const cards = Math.floor(hud.cards);
   const lockedCount = WEAPON_KEYS.length - unlocks.length;
@@ -673,13 +675,13 @@ export default function App() {
           </div>
           <div className="score">
             <small>SCORE</small><i className="score-num">{hud.score.toLocaleString()}</i>
-            <span className="biome-sub" title={`${hud.biome} · level ${hud.level}`}><small className="lv">LV. {hud.level} ·</small> {hud.biome}</span>
+            <span className="biome-sub" title={`${hud.biome} · level ${hud.level}`}><small className="lv">LV. {hud.level}{hud.biome ? " ·" : ""}</small> {hud.biome}</span>
             <div className="coin-badge"><Icon n="coin" label="coins" />{hud.coins}<span>¢</span></div>
           </div>
           <div className="hud-right">
             <button className="round-btn" onClick={() => { if (phase === "playing") { releaseAll(); setPhase("paused"); } else setPhase("playing"); }} aria-label={phase === "playing" ? "Pause" : "Resume"} aria-keyshortcuts="Escape" title={phase === "playing" ? "Pause (Esc)" : "Resume (Esc)"}><Icon n={phase === "playing" ? "pause" : "play"} /></button>
             {(DEBUG || hud.fps < 50) && <small className="fps" title={hud.fps < 50 ? "the projector is struggling — lower the options for more speed" : undefined}>{hud.fps} FPS</small>}
-            {hud.shopOpen && (
+            {hud.shopOpen && hud.shopItems.length > 0 && (
               <button className="shop-hud-btn" onClick={() => setShopView(true)} aria-label="Open Porbo's shop" title={`Porbo's ledger (${keysMap.current.interact.map(prettyKey).join(" / ")})`}>
                 <span><Icon n="cart" />PORBO'S SHOP · {keysMap.current.interact.map(prettyKey).join("/")}</span>
               </button>
