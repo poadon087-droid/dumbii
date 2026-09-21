@@ -3,6 +3,7 @@ node_modules/
 dist/
 *.tsbuildinfo
 .vite/
+.env
 
 # logs, editor and OS noise
 *.log

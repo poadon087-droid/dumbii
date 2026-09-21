@@ -3,7 +3,7 @@
  * playable cast, the six new weapons, the four new creeps, stage hazards,
  * new pickups, new charms, new boons and the shop.
  *
- *   npx esbuild tests/features.test.ts --bundle --platform=node --format=esm --outfile=/tmp/ft.mjs && node /tmp/ft.mjs
+ *   node tools/run-tests.mjs
  */
 import { applyUpgrade, buyShopItem, createState, update, earnedAchievements } from "../src/game/engine";
 import { collect, damageEnemy, hurtPlayer, killEnemy, tryParry } from "../src/game/combat";

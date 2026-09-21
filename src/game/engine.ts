@@ -8,7 +8,7 @@
 import { BIOMES, BIOME_LENGTH, CHARACTERS, ENEMIES, MODIFIERS, WAVES, WEAPONS } from "./data";
 import type { CharmKey, CharacterKey, Enemy, EnemyKind, GameState, Input, Mode, Player, Point, WeaponKey } from "./types";
 import { buildGrid, clamp, compact, dist, fieldTop, HORIZON, liveBuf, nearBuf2, nearby, pick, rnd, sanitize, TAU, viewBand, worldBounds } from "./util";
-import { addCards, drop, puff, ring, say } from "./fx";
+import { addCards, drop, encounterPulse, puff, ring, say } from "./fx";
 import { canStand, rowSpanOf, stageAt, worldOf, type MapId, type StageDef } from "./world";
 import { enemyShot, spawnBoss, spawnCrate, spawnEnemy } from "./spawn";
 import { collect, damageEnemy, hurtPlayer, killEnemy, tryParry } from "./combat";
@@ -231,6 +231,7 @@ export function update(g: GameState, input: Input, dt: number, vw: number, h: nu
     g.biome = biome;
     g.announce = { title: stage ? stage.name : BIOMES[biome].name, sub: stage ? stage.tagline : BIOMES[biome].hazardTip, life: 3.8 };
     g.events.push("biome");
+    encounterPulse(g, p.x, p.y, BIOMES[biome]?.accent ?? "#f7d267", 140);
     // clear the outgoing biome's hazards so threats never bleed across stages
     g.hazards.length = 0;
     g.hazardTimer = 3.2;
@@ -321,6 +322,7 @@ export function update(g: GameState, input: Input, dt: number, vw: number, h: nu
     g.waveKind = pickW.id;
     g.announce = { title: pickW.name, sub: pickW.sub, life: 2.6 };
     g.events.push("wave");
+    encounterPulse(g, p.x, p.y, "#ffc857", 170);
     for (let i = 0; i < pickW.count; i++) spawnEnemy(g, w, h, pick(pickW.kinds) as EnemyKind);
     g.wave++; g.waveTimer = rnd(38, 55);
   }
@@ -371,7 +373,6 @@ export function update(g: GameState, input: Input, dt: number, vw: number, h: nu
     p.dashTime -= d;
     p.x += p.dashDir.x * p.speed * 3.6 * d;
     p.y += p.dashDir.y * p.speed * 3.6 * d;
-    p.trail.push({ x: p.x, y: p.y }); if (p.trail.length > 7) p.trail.shift();
     if (Math.random() < .5) puff(g, p.x - p.dashDir.x * 16, p.y + 12, "#efe6d5", 1, 40, 8);
     if (g.upgrades.dashfire && Math.random() < .8) {
       g.bullets.push({

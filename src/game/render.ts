@@ -139,7 +139,6 @@ function drawPlayer(p: Player, g: GameState) {
   const bob = p.moving ? Math.abs(Math.sin(ft * .021)) * 5 : Math.sin(ft * .006) * 2;
   const stride = p.moving ? Math.sin(ft * .021) * 13 : 0;
   const flip = p.facing < 0, la = flip ? Math.PI - p.angle : p.angle;
-  for (let i = 0; i < p.trail.length; i++) { const tr = p.trail[i]; ctx.globalAlpha = (i + 1) / p.trail.length * .35; ctx.fillStyle = WEAPONS[wk].color; ctx.beginPath(); ctx.ellipse(tr.x, tr.y, 18, 26, 0, 0, TAU); ctx.fill(); } ctx.globalAlpha = 1;
   ctx.save(); ctx.translate(p.x, p.y);
   ctx.globalAlpha = .28; ctx.fillStyle = "#0d0a10"; ctx.beginPath(); ctx.ellipse(0, 37, 24, 7, 0, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
   if (p.superTime > 0) { ctx.globalAlpha = .5 + Math.sin(frame) * .2; ctx.strokeStyle = "#ffe27a"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(0, -2, 44 + Math.sin(frame * .8) * 4, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
@@ -1433,6 +1432,34 @@ export function render(c: Ctx, g: GameState, w: number, h: number, t: number) {
     }
   }
 
+  // Keep off-screen actors readable without opening a map. The same edge language is used for
+  // enemies, incoming enemy fire, and player shots that are still travelling through another
+  // district, so the player can react before anything enters the camera.
+  const edgeSignal = (x: number, y: number, color: string, caption: string, pulse: number) => {
+    const sx = x - camX, sy = y - camY, mg = 24;
+    if (sx > mg && sx < w - mg && sy > mg && sy < h - mg) return;
+    const cx = w / 2, cy = h / 2, dx = sx - cx, dy = sy - cy;
+    const k = Math.min(1, Math.abs(dx) > .001 ? (cx - mg) / Math.abs(dx) : 1e9, Math.abs(dy) > .001 ? (cy - mg) / Math.abs(dy) : 1e9);
+    const ex = cx + dx * k, ey = cy + dy * k, ang = Math.atan2(dy, dx);
+    ctx.save(); ctx.translate(ex, ey); ctx.rotate(ang); ctx.globalAlpha = .72 + Math.sin(t * .01 + pulse) * .2;
+    ctx.fillStyle = color; ctx.strokeStyle = INK; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(12, 0); ctx.lineTo(-6, -7); ctx.lineTo(-2, 0); ctx.lineTo(-6, 7); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    if (words()) label(caption, Math.max(38, Math.min(w - 38, ex)), Math.max(16, Math.min(h - 12, ey + 16)), 10, color, 0, 3);
+  };
+  let enemySignals = 0, threatSignals = 0, weaponSignals = 0;
+  for (const e of g.enemies) {
+    if (enemySignals >= 5 || e.hidden || e.hp <= 0 || onScreen(e.x, e.y, e.r + 20)) continue;
+    edgeSignal(e.x, e.y, e.pink ? pinkC() : "#ffd75a", "ENEMY", enemySignals++);
+  }
+  for (const b of g.bullets) {
+    if (b.enemy && threatSignals < 4 && !onScreen(b.x, b.y, b.r + 12)) {
+      edgeSignal(b.x, b.y, pinkHot(), "INCOMING", threatSignals++ + 11);
+    } else if (!b.enemy && weaponSignals < 3 && !onScreen(b.x, b.y, b.r + 12)) {
+      edgeSignal(b.x, b.y, "#74e6ff", "SHOT", weaponSignals++ + 23);
+    }
+  }
+
   if (g.modifier?.id === "fog") { // rolling fog with a clear pocket around the player
     const grd = ctx.createRadialGradient(p.x - camX, p.y - camY, 60, p.x - camX, p.y - camY, 260); grd.addColorStop(0, "rgba(220,214,200,0)"); grd.addColorStop(1, "rgba(220,214,200,.82)"); ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
     if (!lowFx) { ctx.globalAlpha = .25; ctx.fillStyle = "#ece6da"; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(((t * .03 * (1 + i % 3 * .3)) + i * 260) % (w + 400) - 200, h * .4 + i * 60 + Math.sin(t * .001 + i) * 20, 220, 40, 0, 0, TAU); ctx.fill(); } ctx.globalAlpha = 1; }
@@ -1442,13 +1469,13 @@ export function render(c: Ctx, g: GameState, w: number, h: number, t: number) {
     if (g.slowmo > 0) { ctx.globalAlpha = .18; ctx.fillStyle = "#2a1330"; ctx.fillRect(0, 0, w, h); ctx.globalAlpha = 1; }
     if (g.modifier?.id === "pink") { ctx.globalAlpha = .08 + Math.sin(t * .01) * .03; ctx.fillStyle = pinkC(); ctx.fillRect(0, 0, w, h); ctx.globalAlpha = 1; }
   }
-  // ---- SPEED LINES: the dash should tear the panel open a little ----
-  if (fxo.speedlines && p && (p.dashTime > 0 || g.combo >= 40)) {
-    const power = p.dashTime > 0 ? 1 : Math.min(.55, (g.combo - 40) / 90);
+  // ---- SPEED LINES: hot combos ----
+  if (fxo.speedlines && p && g.combo >= 40) {
+    const power = Math.min(.55, (g.combo - 40) / 90);
     const tNew = p.trail[p.trail.length - 1], tOld = p.trail[0];
     const a0 = tNew && tOld && Math.hypot(tNew.x - tOld.x, tNew.y - tOld.y) > 6
       ? Math.atan2(tOld.y - tNew.y, tOld.x - tNew.x)      // streaks trail behind the motion
-      : Math.atan2(-1, 0);
+      : Math.atan2(-p.dashDir.y, -p.dashDir.x);
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     ctx.lineCap = "round";

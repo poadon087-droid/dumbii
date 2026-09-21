@@ -15,6 +15,29 @@ npm run build     # typecheck + bundle + refresh index.html
 npm run preview   # vite preview on :4173
 ```
 
+## Enable the online database
+
+The game uses Supabase for shared leaderboards, player profiles, and coin history. The
+browser can reach the configured Supabase project, but the database tables must be
+created once before online data can be saved.
+
+1. Open the Supabase dashboard for project `hiswzzwmfplipdeidlyj`.
+2. Open **SQL Editor** and create a new query.
+3. Copy and run the complete contents of [`supabase_schema.sql`](./supabase_schema.sql).
+4. Reload the game and open **OPTIONS → DATABASE**. The connection test should report
+   `Connected successfully to Supabase!`.
+
+The publishable key is configured in `.env` for local builds. `.env` is ignored by Git
+and must be configured again on a different machine or deployment environment using
+the same variable names shown in [`.env.example`](./.env.example). Never use a
+Supabase secret/service-role key in a browser build.
+
+## Upload/deploy
+
+Run `npm run build`. The generated `dist/index.html` is the uploadable single-file
+game. Upload that file to any static host (GitHub Pages, Netlify, Vercel, or a web
+server). The database remains hosted by Supabase and is accessed by the browser.
+
 ## Develop
 
 ```bash

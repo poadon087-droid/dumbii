@@ -26,9 +26,24 @@ function shipAsIndexHtml(): Plugin {
   };
 }
 
+function devHtmlRewrite(): Plugin {
+  return {
+    name: "rr:dev-html-rewrite",
+    apply: "serve",
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        if (req.url === "/" || req.url === "/index.html" || req.url?.startsWith("/?")) {
+          req.url = req.url ? req.url.replace(/^\/(?:index\.html)?(?=\?|$)/, "/dev.html") : "/dev.html";
+        }
+        next();
+      });
+    },
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), viteSingleFile(), shipAsIndexHtml()],
+  plugins: [react(), tailwindcss(), viteSingleFile(), devHtmlRewrite(), shipAsIndexHtml()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -41,6 +56,8 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
+    port: 5173,
+    strictPort: true,
     // Accept any origin: this is a static single-file build served for previewing.
     allowedHosts: true,
     // The live preview is embedded as a sandboxed iframe with an opaque (null)
@@ -50,6 +67,8 @@ export default defineConfig({
   },
   preview: {
     host: "0.0.0.0",
+    port: 4173,
+    strictPort: true,
     allowedHosts: true,
   },
 });

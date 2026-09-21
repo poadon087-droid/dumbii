@@ -3,7 +3,7 @@
  * The engine has no DOM dependencies, so we can run the real `update()` loop
  * in Node and assert gameplay invariants + catch runtime errors.
  *
- *   npx esbuild tests/sim.ts --bundle --platform=node --format=esm --outfile=/tmp/sim.mjs && node /tmp/sim.mjs
+ *   node tools/run-tests.mjs
  */
 import { createState, update, currentWeapon } from "../src/game/engine";
 import { ENEMY_KEYS, WEAPON_KEYS } from "../src/game/data";

@@ -1,0 +1,19 @@
+{
+  "target": "new-ui dev server (http://localhost:5173)",
+  "date": "2026-09-21T06:03:22.686Z",
+  "total": 0,
+  "screens": {
+    "home": 0,
+    "cast": 0,
+    "arms": 0,
+    "charm": 0,
+    "foes": 0,
+    "how": 0,
+    "shop": 0,
+    "board": 0,
+    "vault": 0,
+    "settings": 0,
+    "mobile-home": 0,
+    "mobile-arms": 0
+  }
+}

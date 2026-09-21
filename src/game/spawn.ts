@@ -2,7 +2,7 @@
 import { BOSS_NAMES, ENEMIES, ENEMY_KEYS, WEAPON_KEYS } from "./data";
 import type { Enemy, EnemyKind, GameState, Point } from "./types";
 import { clamp, dist, fieldTop, HORIZON, pick, rnd, TAU, viewBand, worldBounds } from "./util";
-import { drop, puff, ring, say } from "./fx";
+import { drop, encounterPulse, puff, ring, say } from "./fx";
 
 /** Hard ceiling on live creeps. Waves, boss summons and balloon bursts can each spawn
  *  a whole group at once, so the per-tick spawn gate alone let the stage balloon past 120. */
@@ -89,6 +89,7 @@ export function spawnBoss(g: GameState, w: number, h: number) {
   g.bossIntro = { name: bossData.name, title: bossData.title, quote: bossData.quote, life: 3.6 };
   g.announce = { title: e.bossName, sub: "A CHALLENGER APPEARS", life: 3.2 };
   g.events.push("boss");
+  encounterPulse(g, e.x, e.y, "#f7cd58", 210);
   g.shake = 16;
   if (g.upgrades.shield) {
     g.player.shield = Math.max(g.player.shield, 2);
@@ -106,6 +107,7 @@ export function spawnCrate(g: GameState, w: number, h: number, at?: Point) {
   drop(g, pos.x, pos.y, "weapon", key);
   g.announce = { title: "PRIZE CRATE!", sub: "A NEW WEAPON JUST LANDED", life: 2.2 };
   g.events.push("crate");
+  encounterPulse(g, pos.x, pos.y, "#f9d45b", 120);
   ring(g, pos.x, pos.y, "#ffd75a", 90);
   puff(g, pos.x, pos.y + 10, "#e8dfcf", 10, 90, 7);
 }

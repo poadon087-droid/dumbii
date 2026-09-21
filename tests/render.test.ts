@@ -5,7 +5,7 @@
  * weapon, pickup, charm and character. This catches undefined access / typos in the
  * draw paths that TypeScript cannot see (canvas APIs are all `any`-ish at runtime).
  *
- *   npx esbuild tests/render.test.ts --bundle --platform=node --format=esm --outfile=/tmp/rt.mjs && node /tmp/rt.mjs
+ *   node tools/run-tests.mjs
  */
 import { createState, update } from "../src/game/engine";
 import { BIOMES, CHARACTER_KEYS, CHARACTERS, CHARM_KEYS, ENEMY_KEYS, WEAPON_KEYS } from "../src/game/data";

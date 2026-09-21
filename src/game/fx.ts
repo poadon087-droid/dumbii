@@ -24,6 +24,17 @@ export const shell = (g: GameState, x: number, y: number, dir: number) =>
 export const say = (g: GameState, x: number, y: number, text: string, color = "#ffe27a", big = false) => {
   if (g.texts.length < 40) g.texts.push({ x, y, text, life: .9, max: .9, color, rot: rnd(-.25, .25), big });
 };
+/** Small animated threat pulses for room pressure, boss reveals and stage pushes. */
+export const encounterPulse = (g: GameState, x: number, y: number, color = "#f6d565", radius = 150) => {
+  for (let i = 0; i < 6; i++) {
+    const t = .18 + i * .16;
+    pushPuff(g, { x, y, vx: 0, vy: 0, life: t, max: t, color, size: radius * (0.12 + i * 0.14), ring: true });
+  }
+  for (let i = 0; i < 12; i++) {
+    const a = rnd(TAU), speed = rnd(20, 80);
+    pushPuff(g, { x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, life: .45 + rnd(.22), max: .5, color, size: rnd(3, 6) });
+  }
+};
 export const addCards = (g: GameState, n: number) => { g.player.cards = clamp(g.player.cards + n, 0, 5); };
 export const drop = (g: GameState, x: number, y: number, kind: PickupKind, weapon?: WeaponKey, price?: number) => {
   g.pickups.push({ x, y, kind, life: kind === "weapon" ? 22 : 12, phase: rnd(9), weapon, fresh: true, price });
